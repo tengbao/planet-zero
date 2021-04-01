@@ -1,0 +1,325 @@
+@purple: #352776;
+@purpleText: #684CE2;
+@purpleTextLight: @purpleText * 1.4 + 0.1 * #fff;
+
+@blue: #112255;
+
+[v-cloak] { display: none }
+
+.grad(@c1, @c2) {
+  background: @c1;
+  background: linear-gradient(120deg, @c1 20%, @c2 80%);
+}
+
+body, html {
+  width:100%; height:100%;
+  overflow:hidden;
+}
+
+body {
+  .grad(@purple, #2D224D * 0.85);
+  display:block; margin:0; padding:0;
+  font-family: 'circular', 'circular std', lato, 'roboto', 'segoe ui', sans-serif;
+  user-select: none;
+  &.c1 {
+    background: linear-gradient(120deg, #23515E 20%, #0A1C32 80%);
+  }
+  &.c2 {
+    background: linear-gradient(120deg, #9CCCD8 20%, #DEEBCD 50%, #F4E9A7 80%);
+  }
+}
+
+#canvas {
+  width: 100%; height: 100%; position: relative; z-index: 3;
+  image-rendering: optimizeSpeed;             /* Older versions of FF          */
+  image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
+  image-rendering: -webkit-optimize-contrast; /* Safari                        */
+  image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
+  image-rendering: pixelated;                 /* Awesome future-browsers       */
+  -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
+}
+
+.hidden {display:none;}
+
+/* Cursor Styles */
+.pointer {
+  cursor: pointer;
+}
+.btn {
+  border: 2px solid;
+  display: inline-block;
+  border-radius: 100px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  letter-spacing: 1px;
+  font-weight: bold;
+  transition: all 0.1s;
+  text-transform: uppercase;
+  &:hover {
+    background: fade(@purpleText, 50%);
+    color: fade(white, 90%);
+    .hamburger {
+      &:before, &:after, & { background: white; }
+    }
+  }
+  .hamburger {
+    top: 1px; margin-right: 10px;
+    &:before, &:after, & {
+      content: ' ';
+      display: inline-block;
+      width: 16px; height: 2px; background: @purpleText;
+      position: relative; border-radius: 100px;
+      transition: all 0.1s;
+    }
+    &:before { top: -6px; position: absolute; width: 22px; left: -3px; }
+    &:after { top: -12px; position: absolute; }
+  }
+}
+.restart {
+  display: inline-block; line-height: 2;
+  font-size: 20px;
+  margin-left: 15px;
+  transition: all 0.1s;
+  cursor: pointer;
+  &:hover {
+    color: white;
+  }
+}
+
+#fps {
+  position: absolute; right: 10px; bottom: 10px;
+  color: @purpleText; opacity: 0.75;
+  font-size: 12px;
+}
+
+.corner {
+  position: absolute;
+  z-index: 4;
+  // transform: translate(-50%, -50%);
+  top: 20px;
+  left: 25px;
+  text-align: left;
+  color: @purpleText * 1.1;
+  .title, .instruction {
+    pointer-events: none;
+  }
+  .title {
+    font-size: 42px; font-weight: bold; opacity: 0.85;
+  }
+  .instruction {
+    font-size: 24px; font-weight: normal; opacity: 0.85;
+  }
+
+  &.top-right {
+    right: 25px; left: auto; top: 25px;
+    .music {
+      cursor: pointer;
+      font-size: 20px;
+      &.disabled {
+        opacity: 0.5;
+        position: relative;
+        &:after {
+          content: ' '; display: block; position: absolute;
+          height: 2px; width: 22px; background: @purpleText;
+          top: 10px; left: 1px; transform: rotate(45deg);
+        }
+      }
+    }
+  }
+}
+
+@ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+#levels {
+  position: fixed; top:0; left:0; width: 100%; min-height: 100%; z-index: 5;
+  display: flex; align-items: center; justify-content: center;
+  .grad(fade(@blue * 0.7, 80%), fade(@blue * 0.4, 80%));
+  color: @purpleTextLight;
+  a {color: inherit;}
+  .title {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    animation: fadeIn 0.25s 1 @ease-out-quart;
+  }
+  .inner {
+    padding: 40px;
+  }
+  .levels {
+    margin-bottom: 60px;
+    text-align: center;
+    max-width: 900px;
+  }
+  .level {
+    display: inline-block;
+    vertical-align: top;
+    width: 80px; padding: 20px;
+    height: 125px;
+    background: @purple;
+    border: 2px solid @purple * 1.75;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    text-align: center;
+    margin: 20px;
+    transition: 0.1s ease-out;
+    font-size: 14px;
+    animation: fadeIn 0.5s 1 @ease-out-quart;
+    span.big {
+      font-size: 64px;
+      line-height: 1;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+    &:not(.complete):hover {
+      background: @purple * 1.25;
+      border-color: @purple * 2.25;
+      transform: scale(1.05);
+      transition: 0.15s @ease-out-quart;
+    }
+    &.complete {
+      background: #ddaa22 * 1;
+      border-color: #ffDD66;
+      position: relative;
+      &:after {
+        content: "COMPLETE";
+        position: absolute;
+        bottom: 0; left: 0;
+        width: 100%;
+        color: #ddaa22 * 1.15;
+        background: #ddaa22 * 0.75;
+        padding: 4px 0;
+        font-size: 12px; font-weight: bold;
+        letter-spacing: 1px;
+      }
+    }
+  }
+  .about {
+    position: absolute; bottom: 25px;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    opacity: 0.4;
+  }
+}
+
+@keyframes fadeIn {
+  0% {  transform: scale(0.9); opacity: 0; }
+  100% {  transform: scale(1); opacity: 1;}
+}
+
+.tooltip-cont {
+  width: 20px; height: 20px;
+  position: absolute;
+  top: 100px; left: 600px;
+  z-index: 10000;
+  background: none;
+  pointer-events: none;
+}
+
+// VUE TRANSITIONS
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .2s
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0
+}
+
+/* TOOLTIPS */
+.tooltip {
+  display: block !important;
+  z-index: 10000;
+  font-size: 15px;
+  .tooltip-inner {
+    background: @purpleText;
+    color: white;
+    border-radius: 16px;
+    padding: 6px 10px 5px;
+  }
+  .tooltip-arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin: 5px;
+    border-color:@purpleText;
+    z-index: 1;
+  }
+  &[x-placement^="top"] {
+    margin-bottom: 5px;
+    .tooltip-arrow {
+      border-width: 5px 5px 0 5px;
+      border-left-color: transparent !important;
+      border-right-color: transparent !important;
+      border-bottom-color: transparent !important;
+      bottom: -5px;
+      left: calc(50% - 5px);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+  &[x-placement^="bottom"] {
+    margin-top: 5px;
+    .tooltip-arrow {
+      border-width: 0 5px 5px 5px;
+      border-left-color: transparent !important;
+      border-right-color: transparent !important;
+      border-top-color: transparent !important;
+      top: -5px;
+      left: calc(50% - 5px);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+  &[x-placement^="right"] {
+    margin-left: 5px;
+    .tooltip-arrow {
+      border-width: 5px 5px 5px 0;
+      border-left-color: transparent !important;
+      border-top-color: transparent !important;
+      border-bottom-color: transparent !important;
+      left: -5px;
+      top: calc(50% - 5px);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+  &[x-placement^="left"] {
+    margin-right: 5px;
+    .tooltip-arrow {
+      border-width: 5px 0 5px 5px;
+      border-top-color: transparent !important;
+      border-right-color: transparent !important;
+      border-bottom-color: transparent !important;
+      right: -5px;
+      top: calc(50% - 5px);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+  &.popover {
+    @color: #f9f9f9;
+    .popover-inner {
+      background: @color;
+      color: black;
+      padding: 24px;
+      border-radius: 5px;
+      box-shadow: 0 5px 30px rgba(0,0,0, .1);
+    }
+    .popover-arrow {
+      border-color: @color;
+    }
+  }
+  &[aria-hidden='true'] {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .1s, visibility .1s;
+  }
+  &[aria-hidden='false'] {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity .1s;
+  }
+}

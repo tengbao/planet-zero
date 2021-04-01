@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html><head>
+  <title>PLANET ZERO - A fast game of expansion & conquest</title>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-42988408-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-42988408-3');
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="description" content="PLANET ZERO - A fast game of expansion & conquest" />
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/type/circular/stylesheet.css">
+  <link rel="stylesheet" href="../css/type/entypo.css">
+  <link rel="stylesheet/less" type="text/css" href="./styles.less">
+  <!-- <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> -->
+
+  <script src="easeljs.min.js"></script>
+  <script src="../js/jquery.js"></script>
+  <script src="../js/lodash.min.js"></script>
+  <script src="../js/less.min.js"></script>
+  <!-- <script src="../js/hsluv.min.js"></script> -->
+  <script src="../js/vue.min.js"></script>
+  <script src="../js/v-tooltip.min.js"></script>
+</head><body>
+  <!-- <audio loop id="music">
+    <source src="./music1.mp3" type="audio/mpeg">
+  </audio> -->
+  <div id="app" class="model-cont" :class="{ 'pointer': g.cursorPointer }">
+    <div id="fps" v-cloak> {{ g.fps && g.fps.fps.toFixed(1) }} </div>
+    <div class="corner" v-cloak>
+      <div class="title">{{g.level + 1}}: {{ g.maps && g.maps[g.level].name }} </div>
+      <!-- <div class="instruction">
+        Player orange. <br>
+        Click & drag to launch ships. <br>
+        Space & drag to auto-launch. <br>
+      </div> -->
+      <br/>
+      <div class="btn" @click="g.pause()">
+        <i class="hamburger"></i>
+        Select Level
+      </div>
+      <div class="restart" @click="g.restart()">
+        <i class="ent-ccw"></i>
+      </div>
+    </div>
+    <div class="corner top-right" v-cloak>
+      <div class="music" @click="s.toggleSound()" :class="{disabled: !(g && g.storage && g.storage.data.soundEnabled)}">
+        <i class="ent-note-beamed"></i>
+      </div>
+    </div>
+    <div id="toolbar">
+      <div class=""> </div>
+    </div>
+    <div id="container">
+      <canvas id="canvas"></canvas>
+    </div>
+
+    <div ref="tooltipCont" class="tooltip-cont" v-tooltip="{
+      content: g.tooltipContent+'',
+      trigger: 'manual',
+      offset: 5
+    }">
+    </div>
+
+    <transition name="fade" v-cloak>
+      <div v-if="g.paused" id="levels" @click="g.unpause()">
+        <div class="inner">
+          <div class="title">Level Select</div>
+          <div class="levels">
+            <div v-for="(m, i) in g.maps" class="level" @click.stop="g.confirmLoadMap(i)" :class="{ 'complete': g.storage.isLevelComplete(i) }">
+              <span class="big">{{i + 1}}</span>
+              <br/>
+              <span>{{m.name}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="about" @click.stop="void(0)">
+          Made by <a href="http://www.tengbao.me">Teng Bao</a>. Inspired by <a href="http://colonizer.creativerobot.co/">Colonizer</a>.
+        </div>
+      </div>
+    </transition>
+  </div>
+  <script src="game.min.js"></script>
+</body></html>

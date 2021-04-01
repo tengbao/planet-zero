@@ -1,0 +1,26 @@
+{
+  "name": "planetzero",
+  "version": "0.1.0",
+  "description": "A game",
+  "main": "game.min.js",
+  "scripts": {
+    "build": "webpack",
+    "watch": "npm run build && chokidar \"*.coffee\" \"webpack.config.js\" -c \"npm run build\""
+  },
+  "keywords": [
+    "game",
+    "javascript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "chokidar": "^1.7.0",
+    "coffee-loader": "^0.7.3",
+    "coffee-script": "^1.12.7",
+    "less": "^2.7.2",
+    "raw-loader": "^0.5.1",
+    "webpack": "^3.6.0",
+    "webpack-obfuscator": "^0.11.2"
+  }
+}
